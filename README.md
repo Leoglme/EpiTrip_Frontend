@@ -1,3 +1,7 @@
+<img 
+src="/public/epitrip-logo-large.png" 
+alt="epitrip" />
+
 # EpiTrip
 
 ## Description
