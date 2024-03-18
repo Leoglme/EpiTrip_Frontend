@@ -53,7 +53,7 @@ git clone git@github.com:Leoglme/EpiTrip_Frontend.git
 
 <br /><br /><br /><br />
 
-## Production
+## 🚀 Production
 
 ### ⚙️➡️ Automatic Distribution Process (CI / CD)
 
