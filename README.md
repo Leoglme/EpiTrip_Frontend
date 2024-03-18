@@ -1,12 +1,13 @@
 # EpiTrip - FrontEnd
 
 ## 🛠 Tech Stack
-
 - TypeScript (Language)
+- Nuxt (Framework)
 - CI / CD (Github Actions)
 - Kubernetes (Prod and Staging)
 
 <br /><br /><br /><br />
+
 
 ## 📚 WebSite
 
@@ -14,6 +15,7 @@
 - WebSite Staging : https://staging.epi-trip.crzcommon.com
 
 <br /><br /><br /><br />
+
 
 ## ⚙️ Setup Environment Development
 
@@ -38,6 +40,7 @@ git clone git@github.com:Leoglme/EpiTrip_Frontend.git
 
 <br /><br /><br /><br />
 
+
 ## 🔄 Cycle Development
 
 1. Open Docker Desktop
@@ -50,6 +53,7 @@ git clone git@github.com:Leoglme/EpiTrip_Frontend.git
 ```
 
 <br /><br /><br /><br />
+
 
 ## Production
 
