@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nuxt:
+    container_name: epitrip-nuxt
+    image: epitrip/frontend:develop
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  app:
+  node_modules:
