@@ -17,7 +17,12 @@ export default defineNuxtConfig({
         },
       ],
       noscript: [],
-      link: [],
+      link: [
+        {
+          rel: 'stylesheet',
+          href: '/css/fonts/souvenir.css',
+        },
+      ],
     },
   },
   ssr: true,

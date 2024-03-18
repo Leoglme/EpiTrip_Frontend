@@ -12,6 +12,8 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: 'Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
+      serif:
+        'Souvenir, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
     },
     screens: {
       xs: '450px',
@@ -43,6 +45,9 @@ module.exports = {
       },
       animation: {
         car: 'car 0.3s ease-in-out',
+      },
+      textColor: {
+        base: '#4C5661',
       },
       colors: {
         primary: {
