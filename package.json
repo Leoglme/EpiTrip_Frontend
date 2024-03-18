@@ -18,9 +18,8 @@
     "*.**": "prettier --check --ignore-unknown"
   },
   "dependencies": {
-    "nuxt": "^3.11.0"
+    "nuxt": "^3.11.0",
     "@vee-validate/rules": "^4.12.6",
-    "nuxt": "^3.10.3",
     "vee-validate": "^4.5.8",
     "yup": "^1.4.0"
   },
