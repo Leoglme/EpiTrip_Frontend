@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: staging-epitrip-website-frontend-service
+  namespace: staging-epitrip-website-frontend
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: staging-epitrip-website-frontend

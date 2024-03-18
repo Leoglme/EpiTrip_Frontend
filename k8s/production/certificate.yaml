@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: prod-epitrip-frontend-crzcommon-cert
+  namespace: prod-epitrip-website-frontend
+spec:
+  secretName: prod-epitrip-frontend-crzcommon-tls
+  dnsNames:
+    - epi-trip.crzcommon.com
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer

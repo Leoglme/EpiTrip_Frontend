@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: staging-epitrip-website-frontend-ingress
+  namespace: staging-epitrip-website-frontend
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - staging.epi-trip.crzcommon.com
+      secretName: staging-epitrip-frontend-crzcommon-tls
+  rules:
+    - host: staging.epi-trip.crzcommon.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: '/'
+            backend:
+              service:
+                name: staging-epitrip-website-frontend-service
+                port:
+                  number: 80

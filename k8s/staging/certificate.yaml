@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: staging-epitrip-frontend-crzcommon-cert
+  namespace: staging-epitrip-website-frontend
+spec:
+  secretName: staging-epitrip-frontend-crzcommon-tls
+  dnsNames:
+    - staging.epi-trip.crzcommon.com
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
