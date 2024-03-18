@@ -1,8 +1,8 @@
 # EpiTrip - FrontEnd
 
 ## 🛠 Tech Stack
-
 - TypeScript (Language)
+- Nuxt (Framework)
 - CI / CD (Github Actions)
 - Kubernetes (Prod and Staging)
 
