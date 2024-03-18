@@ -56,7 +56,7 @@ git clone git@github.com:Leoglme/EpiTrip_Frontend.git
 
 ### ⚙️➡️ Automatic Distribution Process (CI / CD)
 
-#### Si c'est un nouveau projet suivez les instructions :
+#### Si c'est un nouveau projet suivez les instruction :
 
 1. Ajoutées les SECRETS_GITHUB pour :
    - DOCKER_HUB_USERNAME
