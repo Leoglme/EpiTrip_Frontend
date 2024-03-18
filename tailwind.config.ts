@@ -33,15 +33,30 @@ module.exports = {
       },
     },
     extend: {
+      keyframes: {
+        car: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '17%': { transform: 'rotate(-20deg)' },
+          '42%': { transform: 'rotate(20deg)' },
+          '88%': { transform: 'rotate(-20deg)' },
+        },
+      },
+      animation: {
+        car: 'car 0.3s ease-in-out',
+      },
       colors: {
         primary: {
           400: '#0077B6',
         },
         secondary: {
+          300: '#248742',
           400: '#2d6a4f',
         },
         slate: {
           100: '#F5F8FF',
+        },
+        gray: {
+          700: '#4C5661',
         },
         black: '#131A20',
       },

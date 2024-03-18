@@ -1,10 +1,14 @@
 <template>
-  <div class="p-4 text-black">
-    <EpiLogo
-      :width="40"
-      :height="40"
-    />
-    <EpiLogo large />
+  <div class="p-4 text-black min-h-screen bg-[#FFE9D3] py-16">
+    <div class="absolute left-0 right-0 top-0 z-0 h-[80vh] w-full mix-blend-multiply">
+      <img
+        class="w-full h-full object-cover opacity-[0.05]"
+        src="/images/t2.jpg"
+        alt=""
+      />
+    </div>
+
+    <EpiNavbar />
     <h1 class="text-3xl font-bold mb-4">Welcome</h1>
     <p class="mb-4">This is a simple example of a Nuxt page.</p>
     <p class="mb-4">This page is using the <code>useHead</code> composable to set the title of the page.</p>
@@ -15,12 +19,23 @@
       Click me
     </button>
     <UButton>Button</UButton>
+
+    <div class="flex justify-center items-start z-2 relative">
+      <div class="flex md:grid grid-cols-3 lg:grid-cols-4 gap-6 items-start max-w-6xl overflow-x-scroll">
+        <EpiRoadTripCard
+          v-for="n in 14"
+          :key="n"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import EpiLogo from '~/components/ui/EpiLogo.vue'
+import EpiNavbar from '~/components/navigations/EpiNavbar.vue'
 /* META */
+import EpiRoadTripCard from '~/components/cards/EpiRoadTripCard.vue'
+
 useHead({
   title: 'Bienvenue',
 })
