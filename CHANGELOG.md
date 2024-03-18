@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/Leoglme/EpiTrip_Frontend/compare/v1.0.1...v1.0.2) (2024-03-18)
+
+
+### 🐛 Bug Fixes
+
+* fixed production change port in manifest files kubernetes ([5058056](https://github.com/Leoglme/EpiTrip_Frontend/commit/5058056dc249f61cd547d6a45e00af7a976fc2b0))
+
 ## [1.0.1](https://github.com/Leoglme/EpiTrip_Frontend/compare/v1.0.0...v1.0.1) (2024-03-18)
 
 
