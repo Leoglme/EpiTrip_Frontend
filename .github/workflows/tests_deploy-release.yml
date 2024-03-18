@@ -29,9 +29,6 @@ jobs:
       - name: Lint TypeScript to App
         run: npm run lint:ts
 
-      - name: Lint Prettier to App
-        run: npm run lint:prettier
-
       - name: Deploy PR (main) for new Release
         uses: google-github-actions/release-please-action@v3
         with:

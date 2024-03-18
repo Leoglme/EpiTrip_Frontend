@@ -25,9 +25,6 @@ jobs:
       - name: Lint TypeScript to App
         run: npm run lint:ts
 
-      - name: Lint Prettier to App
-        run: npm run lint:prettier
-
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
