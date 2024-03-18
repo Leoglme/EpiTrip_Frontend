@@ -21,4 +21,4 @@ spec:
               service:
                 name: prod-epitrip-website-frontend-service
                 port:
-                  number: 3333
+                  number: 80

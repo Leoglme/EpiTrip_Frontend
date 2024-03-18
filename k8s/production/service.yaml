@@ -5,7 +5,7 @@ metadata:
   namespace: prod-epitrip-website-frontend
 spec:
   ports:
-    - port: 3333
-      targetPort: 3333
+    - port: 80
+      targetPort: 80
   selector:
     app: prod-epitrip-website-frontend
