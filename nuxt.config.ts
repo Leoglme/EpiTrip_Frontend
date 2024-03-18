@@ -23,8 +23,11 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: true },
   components: true,
-  modules: ['nuxt-simple-sitemap', 'nuxt-simple-robots', '@nuxtjs/google-fonts', '@nuxt/ui'],
+  modules: ['nuxt-simple-sitemap', 'nuxt-simple-robots', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss'],
   sitemap: {},
+  site: {
+    url: 'https://epi-trip.crzcommon.com',
+  },
   googleFonts: {
     families: {
       Poppins: true,
