@@ -5,6 +5,7 @@
 - TypeScript (Language)
 - Nuxt (Framework)
 - CI / CD (Github Actions)
+- Docker / DockerCompose (Develop)
 - Kubernetes (Prod and Staging)
 
 <br /><br /><br /><br />
