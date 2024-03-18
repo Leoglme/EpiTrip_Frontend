@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1](https://github.com/Leoglme/EpiTrip_Frontend/compare/v1.0.0...v1.0.1) (2024-03-18)
+
+
+### 💼 Continuous Integration
+
+* delete prettier in ci ([593ad3a](https://github.com/Leoglme/EpiTrip_Frontend/commit/593ad3ac402842d784d39c587c7f204dc6f8f3dc))
+
+
+### 📚 Documentation
+
+* x ([c8514dc](https://github.com/Leoglme/EpiTrip_Frontend/commit/c8514dc71de2d4487d56284070ddc1d4f7992317))
+
 ## 1.0.0 (2024-03-18)
 
 
