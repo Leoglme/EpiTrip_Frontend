@@ -1,101 +1,64 @@
-# EpiTrip
+# EpiTrip - FrontEnd
 
-## Description
+## 🛠 Tech Stack
 
-EpiTrip est un planificateur de voyage en ligne, conçu pour simplifier l'organisation de vos voyages. Il propose des fonctionnalités personnalisées pour trouver des activités, hébergements et services adaptés à vos besoins.
+- TypeScript (Language)
+- CI / CD (Github Actions)
+- Kubernetes (Prod and Staging)
 
-## Fonctionnalités
+<br /><br /><br /><br />
 
-- **Recherche multi-destinations** : Entrer une ou plusieurs destinations pour obtenir des suggestions.
-- **Personnalisation selon critères** : Affiner les résultats en fonction de dates, budget, etc.
-- **Suggestions d'itinéraires** : Obtenir des propositions d'itinéraires entre deux points.
-- **Visualisation sur carte** : Voir les informations et événements sur une carte interactive.
-- **Version imprimable des détails** : Créer un récapitulatif de voyage imprimable avec cartes.
-- **Sauvegarde et partage** : Enregistrer et partager les recherches effectuées.
+## 📚 WebSite
 
-## Technologies
+- WebSite Production : https://epi-trip.crzcommon.com
+- WebSite Staging : https://staging.epi-trip.crzcommon.com
 
-- **Backend** : AdonisJS
-- **Frontend** : NuxtJS 3
+<br /><br /><br /><br />
 
-## Automatisation
+## ⚙️ Setup Environment Development
 
-- **Tests** : Utilisation de frameworks comme Vitest pour les tests automatisés.
-- **Documentation** : Génération de documentation via Swagger.
-- **Déploiement** : Automatisation du déploiement avec des outils comme Github Action, Kubernetes.
-
-# Nuxt 3 Minimal Starter
-
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
+1. Clone the project repository using the following commands :
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+git clone git@github.com:Leoglme/EpiTrip_Frontend.git
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+2. Steps by Platform :
 
 ```bash
-# npm
-npm run dev
+# Windows :
+1. Requirements : Windows >= 10
+2. Download and Install WSL2 : https://learn.microsoft.com/fr-fr/windows/wsl/install
+3. Download and Install Docker Desktop : https://docs.docker.com/desktop/install/windows-install/
 
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+# Unix :
+1. Requirements : macOS or Linux
+2. Download and Install Docker
 ```
+
+<br /><br /><br /><br />
+
+## 🔄 Cycle Development
+
+1. Open Docker Desktop
+2. Run command :
+
+```bash
+   # Start the development server on http://localhost:3000 (Nuxt)
+
+   docker-compose up
+```
+
+<br /><br /><br /><br />
 
 ## Production
 
-Build the application for production:
+### ⚙️➡️ Automatic Distribution Process (CI / CD)
 
-```bash
-# npm
-npm run build
+#### Si c'est un nouveau projet suivez les instructions :
 
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+1. Ajoutées les SECRETS_GITHUB pour :
+   - DOCKER_HUB_USERNAME
+   - DOCKER_HUB_ACCESS_TOKEN
+   - KUBECONFIG
+   - PAT (crée un nouveau token si besoin sur le site de github puis dans le menu du "Profil" puis -> "Settings" -> "Developper Settings' -> 'Personnal Access Tokens' -> Tokens (classic))
