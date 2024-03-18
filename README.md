@@ -12,8 +12,8 @@
 
 ## 📚 WebSite
 
-- WebSite Production : https://epi-trip.crzcommon.com
-- WebSite Staging : https://staging.epi-trip.crzcommon.com
+- Production : https://epi-trip.crzcommon.com
+- Staging : https://staging.epi-trip.crzcommon.com
 
 <br /><br /><br /><br />
 
