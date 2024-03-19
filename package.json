@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx nuxi dev --dotenv .env.development --open",
+    "postinstall": "npx husky",
     "dev:docker": "npx nuxi dev --dotenv .env.development",
     "build:static:develop": "npx nuxi generate --dotenv .env.development",
     "build:static:staging": "npx nuxi generate --dotenv .env.staging",
