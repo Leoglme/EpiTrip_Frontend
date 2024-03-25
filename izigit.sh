@@ -44,9 +44,7 @@ PrIssueToPreprod() {
   if [ "$2" ]; then
     preprod_branch=preprod
     # Get branch name with ticket number
-    issue_branch_name=$(git branch -r | grep "$2" | sed 's/  origin\///')
-    # Add feature/ prefix to the branch name
-    issue_branch_name="feature/$issue_branch_name"
+    issue_branch_name=$(git branch -r | grep "feature/$2" | sed 's/  origin\///')
 
     if [ -z "$issue_branch_name" ]; then
       echo "No git branch found for ticket $2"
