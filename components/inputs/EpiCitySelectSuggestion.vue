@@ -1,13 +1,12 @@
 <template>
   <EpiSelectSuggestion
-    :search-term="searchTerm"
+    v-model:searchTerm="searchTerm"
     :items="cities"
     :search-keys="['name']"
     :label-keys="['name']"
     :icon="props.icon"
     hide-add-element
     :placeholder="props.placeholder"
-    @update:search-term="updateSearchTerm"
     @item-selected="handleItemSelected"
   />
 </template>
@@ -57,7 +56,6 @@ const updateSearchTerm = (value: string) => {
 
 // Fonction pour gérer la sélection d'un item
 const handleItemSelected = (city: City) => {
-  console.log('Ville sélectionnée:', city)
   updateSearchTerm(city.name)
 }
 </script>

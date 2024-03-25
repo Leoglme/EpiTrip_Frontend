@@ -15,7 +15,7 @@
         class="fas absolute top-[45%] transform -translate-y-1/3 ml-3"
         :class="icon"
       />
-      <Field
+      <input
         :id="props.label"
         :value="searchTerm"
         :name="props.label ?? 'search'"
@@ -77,7 +77,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type { PropType, Ref } from 'vue'
-import { Field } from 'vee-validate'
 import { capitalize } from '~/lib/utils/formatsUtils'
 import { filterBySearchText } from '~/lib/utils/searchUtils'
 
