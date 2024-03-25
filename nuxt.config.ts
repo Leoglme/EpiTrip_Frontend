@@ -28,6 +28,7 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: true },
   components: true,
+  plugins: [{ src: '~/plugins/vee-validate.ts', mode: 'client' }],
   modules: ['@nuxtjs/sitemap', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss', 'nuxt-simple-robots'],
   googleFonts: {
     families: {

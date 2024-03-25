@@ -12,8 +12,18 @@
       </div>
 
       <div class="w-full hidden md:flex items-center justify-between lg:justify-end gap-4 flex-wrap">
-        <EpiButton button-type="outline"> Connexion </EpiButton>
-        <EpiButton button-type="fill"> Inscription </EpiButton>
+        <EpiButton
+          button-type="outline"
+          @click="emit('click:login')"
+        >
+          Connexion
+        </EpiButton>
+        <EpiButton
+          button-type="fill"
+          @click="emit('click:register')"
+        >
+          Inscription
+        </EpiButton>
       </div>
     </nav>
   </header>
@@ -23,6 +33,9 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import EpiLogo from '~/components/ui/EpiLogo.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
+
+/* EMITS */
+const emit = defineEmits(['click:login', 'click:register'])
 
 /* REFS */
 const isTop: Ref<boolean> = ref(true)

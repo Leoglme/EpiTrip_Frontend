@@ -8,15 +8,13 @@
       />
     </div>
 
-    <EpiNavbar />
-
     <div class="p-4">
       <section class="z-2 relative h-[80vh] flex flex-col justify-center gap-12">
         <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-2 tracking-tighter">
-          Turn your road trip
+          Transformer votre voyage
           <br />
-          into an
-          <span class="underline-yellow">adventure</span>.
+          en une
+          <span class="underline-yellow">aventure</span>.
         </h1>
 
         <div class="w-full flex justify-center items-center">
@@ -25,12 +23,12 @@
               <EpiCitySelectSuggestion
                 icon="fa-flag"
                 class="w-full"
-                placeholder="Where are you starting?"
+                placeholder="Où commencez-vous ?"
               />
               <EpiCitySelectSuggestion
                 icon="fa-flag-checkered"
                 class="w-full"
-                placeholder="Where are you going?"
+                placeholder="Où allez-vous ?"
               />
               <EpiButton
                 class="w-full md:w-fit"
@@ -58,7 +56,6 @@
 </template>
 
 <script lang="ts" setup>
-import EpiNavbar from '~/components/navigations/EpiNavbar.vue'
 /* META */
 import EpiRoadTripCard from '~/components/cards/EpiRoadTripCard.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
