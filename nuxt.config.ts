@@ -28,11 +28,7 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: true },
   components: true,
-  modules: ['@nuxtjs/sitemap', 'nuxt-simple-robots', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss'],
-  sitemap: {},
-  site: {
-    url: 'https://epi-trip.crzcommon.com',
-  },
+  modules: ['@nuxtjs/sitemap', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss', 'nuxt-simple-robots'],
   googleFonts: {
     families: {
       Poppins: true,
