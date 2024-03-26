@@ -28,7 +28,10 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: true },
   components: true,
-  modules: ['@nuxtjs/sitemap', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss', 'nuxt-simple-robots'],
+  modules: ['@nuxtjs/sitemap', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss', 'nuxt-simple-robots', '@pinia/nuxt'],
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   googleFonts: {
     families: {
       Poppins: true,

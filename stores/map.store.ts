@@ -1,10 +1,9 @@
-// useMapStore.ts
 import { defineStore } from 'pinia'
 // import MapService from '@/lib/services/MapService'
 //
 // import type { Point } from 'geojson'
 
-export const useMapStore = defineStore('MapStore', {
+export const useMapStore = defineStore('mapStore', {
   state: () => ({
     // Vous pourriez vouloir refléter l'état de mapService ici ou juste le laisser gérer par mapService directement
   }),

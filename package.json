@@ -20,6 +20,7 @@
     "*.**": "prettier --check --ignore-unknown"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "@vee-validate/rules": "^4.12.6",
     "axios": "^1.6.8",
     "mapbox-gl": "^3.2.0",
