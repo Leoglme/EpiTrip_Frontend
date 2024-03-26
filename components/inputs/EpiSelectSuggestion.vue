@@ -77,8 +77,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type { PropType, Ref } from 'vue'
-import { capitalize } from '~/lib/utils/formatsUtils'
-import { filterBySearchText } from '~/lib/utils/searchUtils'
+import { capitalize } from '~/core/utils/formatsUtils'
+import { filterBySearchText } from '~/core/utils/searchUtils'
 
 /*  PROPS */
 const props = defineProps({

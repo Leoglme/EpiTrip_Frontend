@@ -28,8 +28,11 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: true },
   components: true,
+  modules: ['@nuxtjs/sitemap', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss', 'nuxt-simple-robots', '@pinia/nuxt'],
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   plugins: [{ src: '~/plugins/vee-validate.ts', mode: 'client' }],
-  modules: ['@nuxtjs/sitemap', '@nuxtjs/google-fonts', '@nuxtjs/tailwindcss', 'nuxt-simple-robots'],
   googleFonts: {
     families: {
       Poppins: true,

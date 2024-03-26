@@ -1,4 +1,4 @@
-import { isNumeric } from '~/lib/utils/typeCheckerUtils'
+import { isNumeric } from '~/core/utils/typeCheckerUtils'
 
 /* Function to loop through the field object and retrieve a value with path */
 export function getValueWithPath<T>(item: T, path: string) {

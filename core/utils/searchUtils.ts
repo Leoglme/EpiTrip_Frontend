@@ -1,5 +1,5 @@
-import { getValueWithPath } from '~/lib/utils/arrayUtils'
-import { sanitizeString } from '~/lib/utils/formatsUtils'
+import { getValueWithPath } from '~/core/utils/arrayUtils'
+import { sanitizeString } from '~/core/utils/formatsUtils'
 
 /**
  * Filter an array of objects by a search text, and a list of properties
