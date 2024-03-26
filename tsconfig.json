@@ -4,6 +4,6 @@
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
-    "types": ["mapbox-gl", "axios"]
+    "types": ["mapbox-gl", "axios", "types/*"]
   }
 }
