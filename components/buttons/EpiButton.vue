@@ -1,11 +1,10 @@
 <template>
   <button
+    :disabled="props.disabled"
     :class="[
       'flex group items-center justify-center gap-2 rounded-full py-3 px-4 text-[14px] font-medium transition-all ' +
         'duration-300 ease-in-out cursor-pointer active:scale-95',
-      props.buttonType === 'fill'
-        ? 'bg-secondary-600 text-white hover:bg-secondary-700'
-        : 'bg-transparent text-secondary-600 border border-secondary-600 hover:bg-secondary-600 hover:text-white',
+      computedButtonClass,
       props.iconPosition === 'right' ? 'flex-row-reverse' : 'flex-row',
     ]"
   >
@@ -18,7 +17,7 @@
         props.buttonType === 'fill' ? 'text-white' : 'text-secondary-600 hover:text-white group-hover:text-white',
       ]"
     ></i>
-    <slot>Button Text</slot>
+    <slot />
   </button>
 </template>
 
@@ -27,6 +26,10 @@ import type { PropType } from 'vue'
 
 /*  PROPS */
 const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
   buttonType: {
     type: String as PropType<'fill' | 'outline'>,
     default: 'fill',
@@ -39,5 +42,16 @@ const props = defineProps({
     type: String as PropType<'left' | 'right'>,
     default: 'left',
   },
+})
+
+/* COMPUTED */
+const computedButtonClass = computed(() => {
+  if (props.disabled) {
+    return 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
+  }
+
+  return props.buttonType === 'fill'
+    ? 'bg-secondary-600 text-white hover:bg-secondary-700'
+    : 'bg-transparent text-secondary-600 border border-secondary-600 hover:bg-secondary-600 hover:text-white'
 })
 </script>

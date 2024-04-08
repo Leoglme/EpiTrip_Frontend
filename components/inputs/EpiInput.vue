@@ -15,7 +15,7 @@
       class="w-full px-4 py-3 mb-3 text-gray-700 bg-gray-100 border-transparent rounded-md focus:border-2 focus:border-secondary-600 focus:bg-white focus:ring-0 outline-none"
       :placeholder="props.placeholder"
       :rules="props.rules"
-      @input="emit('update:value', $event)"
+      @input="handleInput($event)"
     />
     <ErrorMessage
       :name="props.name"
@@ -61,4 +61,9 @@ const props = defineProps({
 const emit = defineEmits<{
   'update:value': [value: string]
 }>()
+
+/* METHODS */
+const handleInput = (event: InputEvent) => {
+  emit('update:value', (event.target as HTMLInputElement).value)
+}
 </script>

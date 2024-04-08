@@ -3,6 +3,7 @@
     <EpiNavbar
       @click:login="openLoginModal"
       @click:register="openRegisterModal"
+      @click:logout="logout"
     />
     <slot />
 
@@ -23,6 +24,8 @@ import EpiNavbar from '~/components/navigations/EpiNavbar.vue'
 import LoginModal from '~/components/modals/LoginModal.vue'
 import RegisterModal from '~/components/modals/RegisterModal.vue'
 
+import 'notyf/notyf.min.css'
+
 /* PROPS */
 const showLoginModal = ref(false)
 const showRegisterModal = ref(false)
@@ -36,5 +39,9 @@ const openLoginModal = () => {
 const openRegisterModal = () => {
   showLoginModal.value = false
   showRegisterModal.value = true
+}
+
+const logout = () => {
+  useAuthStore().signOut()
 }
 </script>

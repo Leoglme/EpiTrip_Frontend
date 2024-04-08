@@ -6,7 +6,10 @@
       :show-right-button="false"
       @update:show="emit('update:show', $event)"
     >
-      <RegisterForm @click:login="emit('click:login')" />
+      <RegisterForm
+        @click:login="emit('click:login')"
+        @ok="emit('update:show', false)"
+      />
     </EpiModal>
   </div>
 </template>
