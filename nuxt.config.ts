@@ -32,6 +32,7 @@ export default defineNuxtConfig({
   pinia: {
     storesDirs: ['./stores/**'],
   },
+  plugins: [{ src: '~/plugins/vee-validate.ts', mode: 'client' }],
   googleFonts: {
     families: {
       Poppins: true,

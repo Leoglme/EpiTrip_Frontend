@@ -1,35 +1,19 @@
 <template>
-  <div class="relative flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-xl">
-    <button
-      class="absolute top-0 right-0 mt-4 mr-4"
-      @click="closeForm"
-    >
-      <svg
-        class="w-6 h-6 text-gray-800"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-    <Logo class="mb-12" />
+  <div class="relative flex flex-col items-center justify-center">
+    <Logo class="mb-6" />
     <h2 class="mb-10 text-2xl font-bold text-gray-800">Connexion</h2>
     <VeeForm
-      class="w-full max-w-sm"
-      @submit.prevent="handleLogin"
+      v-slot="{ meta }"
+      class="w-full max-w-md grid gap-4"
+      @submit="handleLogin"
     >
       <EpiInput
-        v-model:value="credentials.username"
-        name="username"
-        type="text"
-        label="Pseudo ou adresse mail"
-        placeholder="Entrer votre pseudo ou adresse mail"
+        v-model:value="credentials.email"
+        name="email"
+        type="email"
+        label="Email"
+        placeholder="example@epitrip.com"
         rules="required|email"
-        class="mb-8"
       />
 
       <EpiInput
@@ -37,12 +21,13 @@
         name="password"
         type="password"
         label="Mot de passe"
-        placeholder="Entrer votre mot de passe"
+        placeholder="Entrez votre mot de passe"
         rules="required|min:6"
-        class="mb-8"
       />
 
       <EpiButton
+        :disabled="!meta.valid || buttonIsLoading"
+        :icon="buttonIsLoading ? 'fa-spinner fa-spin' : ''"
         class="w-full"
         type="submit"
       >
@@ -52,60 +37,57 @@
     <p class="mt-8 text-sm">
       Vous n'avez pas de compte ?
       <a
-        href="/register"
-        class="font-bold text-secondary-300 hover:text-secondary-400 hover:underline"
-        >Inscrivez-vous</a
+        class="font-bold text-secondary-600 hover:text-secondary-500 hover:underline cursor-pointer"
+        @click.stop="emit('click:register')"
       >
+        Inscrivez-vous
+      </a>
     </p>
   </div>
 </template>
 
-<script>
-import { Form as VeeForm, defineRule, configure } from 'vee-validate'
-import { required, email, min } from '@vee-validate/rules'
+<script lang="ts" setup>
+import { Form as VeeForm } from 'vee-validate'
+import type { Ref } from 'vue'
 import Logo from '@/components/ui/EpiLogo.vue'
 import EpiInput from '~/components/inputs/EpiInput.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
+import { useAuthStore } from '~/stores/auth.store'
 
-export default {
-  components: {
-    EpiButton,
-    EpiInput,
-    VeeForm,
-    Logo,
-  },
-  setup() {
-    defineRule('required', required)
-    defineRule('email', email)
-    defineRule('min', min)
+type LoginCredentials = {
+  email: string
+  password: string
+}
 
-    configure({
-      generateMessage: (ctx) => {
-        const messages = {
-          required: `Le champ ${ctx.field} est obligatoire.`,
-          email: 'Veuillez entrer une adresse email valide.',
-          min: `Le champ ${ctx.field} doit contenir au moins ${ctx.rule.params.length} caractères.`,
-        }
-        return messages[ctx.rule.name] ?? `Le champ ${ctx.field} est invalide.`
-      },
-      validateOnInput: true,
-    })
-  },
-  data() {
-    return {
-      credentials: {
-        username: '',
-        password: '',
-      },
-    }
-  },
-  methods: {
-    handleLogin() {
-      console.log('Tentative de connexion avec:', this.credentials)
-    },
-    closeForm() {
-      console.log('Fermeture du formulaire de connexion')
-    },
-  },
+/* REFS */
+const buttonIsLoading: Ref<boolean> = ref(false)
+const credentials: Ref<LoginCredentials> = ref({
+  email: '',
+  password: '',
+})
+
+/* EMITS */
+const emit = defineEmits<{
+  'click:register': []
+  ok: []
+}>()
+
+/* METHODS */
+const resetCredentials = () => {
+  credentials.value = {
+    email: '',
+    password: '',
+  }
+}
+const handleLogin = async () => {
+  buttonIsLoading.value = true
+  try {
+    await useAuthStore().signIn(credentials.value)
+    resetCredentials()
+    emit('ok')
+  } catch (e) {
+    console.log(e)
+  }
+  buttonIsLoading.value = false
 }
 </script>
