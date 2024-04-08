@@ -14,14 +14,14 @@
       <div class="w-full hidden md:flex items-center justify-end gap-4 flex-wrap">
         <!--   NOT CONNECTED     -->
         <EpiButton
-          v-if="!userIsConnected"
+          v-if="!useAuthStore().isConnected"
           button-type="outline"
           @click="emit('click:login')"
         >
           Connexion
         </EpiButton>
         <EpiButton
-          v-if="!userIsConnected"
+          v-if="!useAuthStore().isConnected"
           button-type="fill"
           @click="emit('click:register')"
         >
@@ -30,7 +30,7 @@
 
         <!--   CONNECTED     -->
         <EpiButton
-          v-if="userIsConnected"
+          v-if="useAuthStore().isConnected"
           icon="fa-power-off"
           button-type="fill"
           @click="emit('click:logout')"
@@ -46,13 +46,13 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import EpiLogo from '~/components/ui/EpiLogo.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
+import { useAuthStore } from '~/stores/auth.store'
 
 /* EMITS */
 const emit = defineEmits(['click:login', 'click:register', 'click:logout'])
 
 /* REFS */
 const isTop: Ref<boolean> = ref(true)
-const userIsConnected: Ref<boolean> = ref(useAuthStore().isConnected)
 
 /* METHODS */
 

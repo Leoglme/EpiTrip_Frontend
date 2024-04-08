@@ -5,6 +5,7 @@ import { useAppStore } from '@/stores/app.store'
 import CookieService from '@/core/services/CookieService'
 import AuthService from '~/core/services/AuthService'
 import { useNotyfStore } from '~/stores/notyf.store'
+import NotyfService from '~/lib/services/NotyfService'
 
 const user: string | undefined = CookieService.getCookie('user')
 const authToken: string | undefined = CookieService.getCookie('authToken')
@@ -16,7 +17,6 @@ export const useAuthStore = defineStore('authStore', {
   }),
   actions: {
     setUser(user: User | undefined): void {
-      console.log('SET USER', user)
       if (user) {
         CookieService.setCookie('user', JSON.stringify(user))
         this.user = user
@@ -26,7 +26,6 @@ export const useAuthStore = defineStore('authStore', {
       }
     },
     setAuthToken(token: string | undefined): void {
-      console.log('set Auth token', token)
       if (token) {
         CookieService.setCookie('authToken', token)
       } else {
@@ -42,10 +41,10 @@ export const useAuthStore = defineStore('authStore', {
           const result: ErrorResponse | TokenResponse | undefined = await AuthService.signIn(payload)
 
           if (result && 'token' in result) {
-            console.log('RESULT LOGIN', result)
             this.setAuthToken(result.token)
             await this.fetchUser()
-            useNotyfStore().success('Successful sign in !')
+            const notyf: NotyfService = new NotyfService()
+            notyf.success('Successful sign in !')
             return result
           } else {
             throw result
@@ -64,7 +63,8 @@ export const useAuthStore = defineStore('authStore', {
           if (result && 'token' in result) {
             this.setAuthToken(result.token)
             await this.fetchUser()
-            useNotyfStore().success('Successful registration !')
+            const notyf: NotyfService = new NotyfService()
+            notyf.success('Successful registration !')
             return result
           } else {
             throw result
