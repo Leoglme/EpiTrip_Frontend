@@ -1,5 +1,5 @@
 <template>
-  <aside class="text-gray-800 w-[25%] h-screen fixed top-0 left-0 overflow-auto bg-gray-50">
+  <aside class="text-gray-800 h-screen w-full top-0 left-0 overflow-auto bg-gray-50">
     <div class="flex justify-center p-4">
       <button
         v-for="category in categories"
@@ -49,7 +49,7 @@ export default {
         },
         {
           name: "S'amuser",
-          iconClass: 'fas fa-laugh-beam',
+          iconClass: 'fas face-laugh-beam',
           items: [
             { id: 3, title: "Parc d'Attractions", description: 'Montagnes russes et jeux pour toute la famille.' },
           ],

@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import mapboxgl, { Map, Marker } from 'mapbox-gl'
+import mapboxgl, { Map, LngLatBounds, Marker } from 'mapbox-gl'
 import axios from 'axios'
 
 const map = ref<Map | null>(null)
@@ -59,7 +59,14 @@ const addRoute = () => {
         },
       })
 
-      new Marker().setLngLat([-74.006, 40.7128]).addTo(map.value!)
+      const bounds = new LngLatBounds()
+      bounds.extend(start)
+      bounds.extend(end)
+
+      map.value!.fitBounds(bounds, { padding: 20 })
+
+      new Marker({ color: '#00ff00' }).setLngLat(start).addTo(map.value!)
+      new Marker({ color: '#0000ff' }).setLngLat(end).addTo(map.value!)
     })
     .catch((error) => console.error('Error calling Mapbox Directions API:', error))
 }
