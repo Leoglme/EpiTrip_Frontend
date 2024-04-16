@@ -26,7 +26,7 @@
         @focus="onfocusSearchInput"
         @keydown.up.prevent="selectPrevious()"
         @keydown.down.prevent="selectNext()"
-        @keydown.enter.prevent="selectItem(selectedIndex ? filteredItems[selectedIndex] : null)"
+        @keydown.enter.prevent="selectItem"
         @input="filterItems"
       />
     </div>
@@ -38,36 +38,46 @@
         ref="list"
         class="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5"
       >
-        <li
-          v-for="(item, index) in filteredItems"
-          :key="index"
-          :class="{ 'bg-secondary-300': index === selectedIndex }"
-          class="text-gray-900 cursor-pointer hover:bg-secondary-300 focus:bg-secondary-300 hover:text-gray-900 focus:text-gray-900 py-2 px-4 flex justify-between"
-          @click="selectItem(item)"
-          @mouseenter="selectedIndex = index"
-        >
-          <div
-            v-for="(key, index2) in labelKeys"
-            :key="key"
-            class="w-full overflow-hidden text-left"
-            :class="index2 === 0 ? 'font-bold' : ''"
+        <template v-for="(item, index) in filteredItems">
+          <li
+            v-if="item && !loading"
+            :key="index"
+            :class="{ 'bg-secondary-300': index === selectedIndex }"
+            class="text-gray-900 cursor-pointer hover:bg-secondary-300 focus:bg-secondary-300 hover:text-gray-900 focus:text-gray-900 py-2 px-4 flex justify-between"
+            @click="selectItem"
+            @mouseenter="selectedIndex = index"
           >
-            {{ capitalize(String(item[key]).toLowerCase()) }}
-          </div>
-        </li>
+            <div
+              v-for="(key, index2) in props.labelKeys"
+              :key="key"
+              class="w-full overflow-hidden text-left"
+              :class="index2 === 0 ? 'font-bold' : ''"
+            >
+              {{ capitalize(String(item[key]).toLowerCase()) }}
+            </div>
+          </li>
+        </template>
+
         <li
-          v-if="filteredItems.length === 0"
+          v-if="loading"
+          class="flex items-center justify-center py-8 px-4 font-semibold text-gray-900"
+        >
+          <i class="fas fa-spinner text-2xl fa-spin mr-2 text-secondary-600" />
+        </li>
+
+        <li
+          v-if="filteredItems.length === 0 && !props.loading"
           class="leading-6 text-gray-900 py-2 px-4 font-semibold"
         >
           Aucun résultat
         </li>
         <li
-          v-if="!hideAddElement"
+          v-if="!props.hideAddElement && !props.loading"
           :class="{ 'bg-secondary-300': selectedIndex === filteredItems.length }"
           class="text-gray-900 cursor-pointer select-none hover:bg-secondary-300 focus:bg-secondary-300 hover:text-gray-900 focus:text-gray-900 py-2 px-4 font-bold my-2"
           @click="addNewItem"
         >
-          <i class="fa-solid fa-plus mr-2 text-accent" />{{ addLabel ? addLabel : 'Nouveau Élément' }}
+          <i class="fa-solid fa-plus mr-2 text-accent" />{{ props.addLabel ? props.addLabel : 'Nouveau Élément' }}
         </li>
       </ul>
     </div>
@@ -76,7 +86,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { PropType, Ref } from 'vue'
+import type { PropType, Ref, ComputedRef } from 'vue'
 import { capitalize } from '~/core/utils/formatsUtils'
 import { filterBySearchText } from '~/core/utils/searchUtils'
 
@@ -128,6 +138,16 @@ const props = defineProps({
     required: false,
     default: 'fa-magnifying-glass',
   },
+  loading: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  enabledFilterBySearchText: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 
 /*  REFS  */
@@ -136,6 +156,11 @@ const filteredItems: Ref<Record<string, unknown>[]> = ref(props.items)
 const selectedIndex: Ref<number | null> = ref(null)
 const selectWrapper = ref<HTMLElement | null>(null)
 const list = ref<HTMLElement | null>(null)
+
+/* COMPUTED */
+const itemsSelected: ComputedRef<Record<string, unknown> | null> = computed(() => {
+  return selectedIndex.value !== null ? filteredItems.value[selectedIndex.value] : null
+})
 
 /* LIFECYCLE */
 onMounted(() => {
@@ -158,8 +183,6 @@ const emit = defineEmits<{
 const onfocusSearchInput = () => {
   if (props.openDropdownOnFocus) {
     showDropdown.value = true
-  } else {
-    emit('update:searchTerm', '')
   }
 }
 const handleClickOutside = (event: MouseEvent) => {
@@ -175,7 +198,11 @@ const handleClickOutside = (event: MouseEvent) => {
 const filterItems = (event: Event) => {
   const value = (event.target as HTMLInputElement).value
   emit('update:searchTerm', value)
-  filteredItems.value = filterBySearchText(props.items, value.toLowerCase(), props.searchKeys)
+  if (props.enabledFilterBySearchText) {
+    filteredItems.value = filterBySearchText(props.items, value, props.searchKeys)
+  } else {
+    filteredItems.value = props.items
+  }
   showDropdown.value = true
   selectedIndex.value = null
 }
@@ -184,22 +211,23 @@ const getItemLabel = (item: Record<string, unknown>) => {
   return props.labelKeys.map((key) => item[key]).join(' ')
 }
 
-const selectItem = (item: Record<string, unknown> | null) => {
+const selectItem = () => {
+  let selectedItem = itemsSelected.value
   if (filteredItems.value.length === selectedIndex.value) {
     addNewItem()
     return
   }
 
-  if (!item && filteredItems.value.length !== 1) {
+  if (!selectedItem && filteredItems.value.length !== 1) {
     return
   }
 
-  if (!item) {
-    item = filteredItems.value[0] as Record<string, unknown>
+  if (!selectedItem) {
+    selectedItem = filteredItems.value[0] as Record<string, unknown>
   }
-  emit('update:searchTerm', getItemLabel(item))
+  emit('update:searchTerm', getItemLabel(selectedItem))
   showDropdown.value = false
-  emit('itemSelected', item)
+  emit('itemSelected', selectedItem)
 }
 
 const selectNext = () => {

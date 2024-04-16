@@ -14,7 +14,11 @@
         'fa',
         props.icon,
         'text-base transition-all duration-300 ease-in-out',
-        props.buttonType === 'fill' ? 'text-white' : 'text-secondary-600 hover:text-white group-hover:text-white',
+        props.buttonType === 'fill'
+          ? props.disabled
+            ? 'text-gray-500'
+            : 'text-white'
+          : 'text-secondary-600 hover:text-white group-hover:text-white',
       ]"
     ></i>
     <slot />
