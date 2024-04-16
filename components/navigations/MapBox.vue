@@ -54,7 +54,7 @@ const addRoute = () => {
           'line-cap': 'round',
         },
         paint: {
-          'line-color': '#ff0000',
+          'line-color': '#ff0',
           'line-width': 5,
         },
       })
