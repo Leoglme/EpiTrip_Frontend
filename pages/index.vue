@@ -24,15 +24,19 @@
                 icon="fa-flag"
                 class="w-full"
                 placeholder="Où commencez-vous ?"
+                @on-mapbox-selected="setStartPlace($event)"
               />
               <EpiCitySelectSuggestion
                 icon="fa-flag-checkered"
                 class="w-full"
                 placeholder="Où allez-vous ?"
+                @on-mapbox-selected="setEndPlace($event)"
               />
               <EpiButton
                 class="w-full md:w-fit"
                 icon="fa-magnifying-glass"
+                :disabled="!startMapboxPlace || !endMapboxPlace"
+                @click="redirectToMap"
               >
                 GO
               </EpiButton>
@@ -56,14 +60,52 @@
 </template>
 
 <script lang="ts" setup>
-/* META */
+import { ref, type Ref } from 'vue'
+import { useRouter } from '#app'
 import EpiRoadTripCard from '~/components/cards/EpiRoadTripCard.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
 import EpiCitySelectSuggestion from '~/components/inputs/EpiCitySelectSuggestion.vue'
+import type { MapboxPlace } from '~/core/types/mapbox'
 
+/* METAS */
 useHead({
   title: 'Bienvenue',
 })
+
+/* HOOKS */
+const router = useRouter()
+
+/* REFS */
+const startMapboxPlace: Ref<MapboxPlace | undefined> = ref(undefined)
+const endMapboxPlace: Ref<MapboxPlace | undefined> = ref(undefined)
+
+/* METHODS */
+const setStartPlace = (place: MapboxPlace | undefined) => {
+  startMapboxPlace.value = place
+}
+
+const setEndPlace = (place: MapboxPlace | undefined) => {
+  endMapboxPlace.value = place
+}
+
+// redirect to /map?start=...&end=...
+const redirectToMap = () => {
+  if (!startMapboxPlace.value || !endMapboxPlace.value) return console.error('Missing start or end place')
+
+  if (!startMapboxPlace.value || !endMapboxPlace.value) {
+    return console.error('Missing start or end place')
+  }
+
+  const query = {
+    start: `${startMapboxPlace.value.coordinates.latitude},${startMapboxPlace.value.coordinates.longitude}`,
+    end: `${endMapboxPlace.value.coordinates.latitude},${endMapboxPlace.value.coordinates.longitude}`,
+  }
+
+  router.push({
+    name: 'map',
+    query,
+  })
+}
 </script>
 
 <style>
