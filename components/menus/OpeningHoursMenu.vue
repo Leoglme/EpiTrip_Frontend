@@ -45,8 +45,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ComputedRef, PropType, Ref } from 'vue'
 import { ref } from 'vue'
-import type { Ref, PropType, ComputedRef } from 'vue'
 import type { GooglePeriod, RegularOpeningHours } from '~/core/types/google-details'
 
 type GooglePeriodFormat = {
@@ -76,11 +76,17 @@ const isOpen: Ref<boolean> = ref(false)
 const menuRef = ref<HTMLElement | null>(null)
 
 /* DATA */
-const weekDays = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
 const today = new Date()
 const todayDayIndex = today.getDay() // Day of the week (0 = Sunday, 1 = Monday, etc.)
 
 /* COMPUTED */
+// array of week days, starting from today
+const weekDays: ComputedRef<string[]> = computed(() => {
+  // const todayIndex = today.getDay()
+  // return [...days.slice(todayIndex), ...days.slice(0, todayIndex)
+  return ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
+})
+
 // Transform RegularOpeningHours to RegularOpeningHoursFormat
 const openingHoursFormat: ComputedRef<RegularOpeningHoursFormat> = computed(() => {
   const formatted: RegularOpeningHoursFormat = {
@@ -93,30 +99,63 @@ const openingHoursFormat: ComputedRef<RegularOpeningHoursFormat> = computed(() =
   return formatted
 })
 
-// Calculation of the next opening or closing time
 const findNextOpeningClosingTime: ComputedRef<string | null> = computed(() => {
   // Chercher les périodes pour aujourd'hui
-  const todayPeriods = openingHoursFormat.value.periods.find((period) => period.open?.day === todayDayIndex)
-
-  // If no schedule for today, search for the next open day
-  if (!todayPeriods || !todayPeriods.open || !todayPeriods.close) {
-    const futurePeriods = openingHoursFormat.value.periods.find(
-      (period) => period.open && period.open.day > todayDayIndex,
-    )
-    if (!futurePeriods || !futurePeriods.open) return null // No other open days found
-    return `${weekDays[futurePeriods.open.day]} à ${formatHour(futurePeriods.open.hour, futurePeriods.open.minute)}`
-  }
-
   const now = today.getHours() * 60 + today.getMinutes() // Current time in minutes since midnight
-  if (openingHoursFormat.value.openNow) {
-    // Find closing time if open
-    const closeMinutes = todayPeriods.close.hour * 60 + todayPeriods.close.minute
-    if (closeMinutes > now) return formatHour(todayPeriods.close.hour, todayPeriods.close.minute)
-  } else {
-    // Find opening time if closed
-    const openMinutes = todayPeriods.open.hour * 60 + todayPeriods.open.minute
-    if (openMinutes > now) return formatHour(todayPeriods.open.hour, todayPeriods.open.minute)
+  let periodsToday = openingHoursFormat.value.periods.filter(
+    (period) => period.open && period.open.day === todayDayIndex,
+  )
+
+  // Handle wrap-around closing time, assuming close can be undefined
+  periodsToday = periodsToday.map((period) => {
+    if (period.close && period.close.day !== todayDayIndex) {
+      return {
+        open: period.open,
+        close: {
+          day: todayDayIndex,
+          hour: 24,
+          minute: 0,
+        },
+      }
+    }
+    return period
+  })
+
+  // Sort periods to get the next relevant opening or closing time
+  periodsToday.sort((a, b) => {
+    const aTime = a.open ? a.open.hour * 60 + a.open.minute : 1440
+    const bTime = b.open ? b.open.hour * 60 + b.open.minute : 1440
+    return aTime - bTime
+  })
+
+  for (const period of periodsToday) {
+    if (openingHoursFormat.value.openNow && period.close) {
+      const closeMinutes = period.close.hour * 60 + period.close.minute
+      if (closeMinutes > now) {
+        return `${formatHour(period.close.hour, period.close.minute)}`
+      }
+    } else if (!openingHoursFormat.value.openNow && period.open) {
+      const openMinutes = period.open.hour * 60 + period.open.minute
+      if (openMinutes > now) {
+        return `${formatHour(period.open.hour, period.open.minute)}`
+      }
+    }
   }
+
+  // If no schedule for today or if no future open or close found for today, search for the next open day
+  let minDay = 7
+  let nextPeriod = null
+  for (const period of openingHoursFormat.value.periods) {
+    if (period.open && period.open.day > todayDayIndex && period.open.day < minDay) {
+      minDay = period.open.day
+      nextPeriod = period
+    }
+  }
+
+  if (nextPeriod && nextPeriod.open) {
+    return `${weekDays.value[nextPeriod.open.day]} à ${formatHour(nextPeriod.open.hour, nextPeriod.open.minute)}`
+  }
+
   return null
 })
 
@@ -129,26 +168,20 @@ const formattedOpeningHours: ComputedRef<{ name: string; value: string | null }[
 
   // Collecting schedules for each day
   openingHoursFormat.value.periods.forEach((period) => {
-    if (period.open && period.close && period.open.day !== undefined) {
+    if (period.open && period.close) {
       const openDay = period.open.day
       const openTime = formatTime(period.open.hour, period.open.minute)
-      let closeTime = formatTime(period.close.hour, period.close.minute)
-
-      // Check if closing time is the next day
-      if (period.close.hour < period.open.hour) {
-        closeTime = `${closeTime} (+1)`
-      }
+      const closeTime = formatTime(period.close.hour, period.close.minute)
 
       if (!schedules[openDay]) {
         schedules[openDay] = []
       }
-
       schedules[openDay].push(`${openTime}–${closeTime}`)
     }
   })
 
   // Building the final result
-  return weekDays.map((name, index) => {
+  return weekDays.value.map((name, index) => {
     const schedule = schedules[index]
     return {
       name,
@@ -156,7 +189,6 @@ const formattedOpeningHours: ComputedRef<{ name: string; value: string | null }[
     }
   })
 })
-
 /* METHODS */
 function formatPeriod(period: GooglePeriod): GooglePeriodFormat {
   const hour = parseInt(period.time.substring(0, 2))
@@ -181,13 +213,19 @@ const toggleOpen = () => {
 }
 
 const formatHour = (hour: number, minute: number) => {
+  // Adjust hour if it is 24 to wrap around to 0
+  if (hour === 24 && minute === 0) {
+    hour = 0
+  }
   return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
 }
 
 // Function to format time in HH:MM format
 const formatTime = (hour: number, minute: number): string => {
-  if (hour >= 24) {
-    hour -= 24 // Adjust hour if it goes into the next day
+  // Adjust hour if it goes into the next day
+  const nextDayShift = hour >= 24
+  if (nextDayShift) {
+    hour -= 24
   }
   return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
 }
