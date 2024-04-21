@@ -12,7 +12,8 @@
       :value="props.value"
       :name="props.name"
       :type="props.type"
-      class="w-full px-4 py-3 mb-3 text-gray-700 bg-gray-100 border-transparent rounded-md focus:border-2 focus:border-secondary-600 focus:bg-white focus:ring-0 outline-none"
+      :class="props.inputClass"
+      class="w-full px-4 py-2.5 mb-3 text-gray-700 bg-gray-100 border-gray-200 rounded-md border-2 focus:border-2 focus:border-secondary-600 focus:bg-white focus:ring-0 outline-none"
       :placeholder="props.placeholder"
       :rules="props.rules"
       @input="handleInput($event)"
@@ -51,6 +52,11 @@ const props = defineProps({
     default: null,
   },
   rules: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  inputClass: {
     type: String,
     required: false,
     default: null,

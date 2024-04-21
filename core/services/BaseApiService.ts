@@ -20,7 +20,7 @@ export default class BaseApiService {
     return response.data
   }
 
-  protected static async post<T>(url: string, data: unknown): Promise<T | ErrorResponse | undefined> {
+  protected static async post<T>(url: string, data: unknown): Promise<T | ErrorResponse> {
     try {
       const response = await this.client().post(url, data)
       return response.data
