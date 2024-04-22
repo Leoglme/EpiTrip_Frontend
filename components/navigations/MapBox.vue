@@ -16,6 +16,7 @@ import type { CoordinateTuple } from '~/lib/types/MapboxTypes'
 import { useGoogleApiStore } from '#imports'
 import type { GooglePlace } from '~/core/types/google-places'
 import { useSuggestionStore } from '~/stores/suggestion.store'
+import { useRoadtripStore } from '~/stores/roadtrip.store'
 
 /* PROPS */
 const props = defineProps({
@@ -28,6 +29,7 @@ const props = defineProps({
 /* STORES */
 const googleApiStore = useGoogleApiStore()
 const suggestionStore = useSuggestionStore()
+const roadtripStore = useRoadtripStore()
 
 /* HOOKS */
 const route = useRoute()
@@ -172,6 +174,63 @@ const loadPlacesMarkers = () => {
   }
 }
 
+const loadRoadtripMarkers = () => {
+  const features: GeoJSON.Feature<GeoJSON.Geometry, GeoJSON.GeoJsonProperties>[] = roadtripStore.steps.map((step) => ({
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [step.location.longitude, step.location.latitude],
+    },
+    properties: {
+      icon: 'custom-marker',
+      title: step.name,
+    },
+  }))
+
+  const featureCollection: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+    type: 'FeatureCollection',
+    features,
+  }
+
+  if (map.value) {
+    if (map.value.getSource('roadtrip')) {
+      // Met à jour les données existantes sans supprimer la source
+      ;(map.value.getSource('roadtrip') as mapboxgl.GeoJSONSource).setData(featureCollection)
+    } else {
+      // Crée la source et la couche si elles n'existent pas
+      map.value.addSource('roadtrip', {
+        type: 'geojson',
+        data: featureCollection,
+      })
+
+      map.value.addLayer({
+        id: 'roadtrip',
+        type: 'symbol',
+        source: 'roadtrip',
+        layout: {
+          'icon-image': 'custom-marker',
+          'icon-size': 0.8,
+          'text-field': '{title}',
+          'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+          'text-offset': [0, 1],
+          'text-size': 12,
+          'text-anchor': 'top',
+        },
+      })
+    }
+
+    // Ajoute ici le centrage sur le dernier step ajouté
+    if (roadtripStore.steps.length > 0) {
+      const lastStep = roadtripStore.steps[roadtripStore.steps.length - 1]
+      map.value.flyTo({
+        center: [lastStep.location.longitude, lastStep.location.latitude],
+        essential: true, // this ensures the animation will happen even if the user is interacting with the map
+        zoom: map.value.getZoom(), // conserve le niveau de zoom actuel
+      })
+    }
+  }
+}
+
 const loadStartEndMarkers = () => {
   const features: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
     type: 'FeatureCollection',
@@ -256,6 +315,7 @@ const generatePlaceMarkers = (data: GooglePlace[], icon: string): GeoJSON.Featur
     },
     properties: {
       icon,
+      name: item.name,
     },
   }))
 }
@@ -282,12 +342,90 @@ const resetMarkers = () => {
   })
 }
 
+const updateRoute = async () => {
+  if (!start.value || !end.value) return
+
+  // Construire les coordonnées pour l'API de directions
+  const coordinates = [
+    start.value,
+    ...roadtripStore.steps.map((step) => [step.location.longitude, step.location.latitude]),
+    end.value,
+  ]
+
+  const directionsRequest = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinates.join(';')}?geometries=geojson&steps=true&access_token=${mapboxAccessToken}`
+
+  try {
+    const response = await axios.get(directionsRequest)
+    const data = response.data.routes[0].geometry
+
+    // Mettre à jour ou ajouter la couche de route si elle n'existe pas
+    if (map.value?.getLayer('route')) {
+      ;(map.value.getSource('route') as mapboxgl.GeoJSONSource).setData(data)
+    } else {
+      map.value?.addLayer({
+        id: 'route',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data,
+        },
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#0077B6',
+          'line-width': 5,
+          'line-opacity': 0.75,
+        },
+      })
+    }
+  } catch (error) {
+    console.error('Failed to update route:', error)
+  }
+}
+
+// When a place marker is clicked, add or remove to the roadtrip
+const setupMarkerClickEvents = () => {
+  if (map.value) {
+    map.value.on(
+      'click',
+      'places',
+      (
+        e: mapboxgl.MapMouseEvent & {
+          features?: mapboxgl.MapboxGeoJSONFeature[] | undefined
+        } & mapboxgl.EventData,
+      ) => {
+        // find the clicked place
+        const clickedPlace = e.features?.find((feature) => feature.layer.id === 'places')
+        if (clickedPlace) {
+          console.log('Clicked place:', clickedPlace)
+          const clickedPlaceName: string | undefined = clickedPlace.properties?.name
+          if (clickedPlaceName) {
+            const clickedPlace: GooglePlace | null = googleApiStore.findPlaceByName(clickedPlaceName)
+            if (clickedPlace) {
+              if (roadtripStore.isStepAdded(clickedPlace)) {
+                roadtripStore.removeStep(clickedPlace)
+              } else {
+                roadtripStore.addStep(clickedPlace)
+              }
+            } else {
+              console.error('Clicked place not found')
+            }
+          }
+        }
+      },
+    )
+  }
+}
+
 /* LIFECYCLE */
 onMounted(() => {
   if (!props.isLoading && start.value && end.value) {
     initializeMap()
     nextTick(() => {
       map.value?.resize()
+      setupMarkerClickEvents()
     })
   }
 })
@@ -300,6 +438,7 @@ watch(
       initializeMap()
       nextTick(() => {
         map.value?.resize()
+        setupMarkerClickEvents()
       })
     }
   },
@@ -337,6 +476,23 @@ watch(
       resetMarkers()
     }
   },
+)
+
+watch(
+  () => roadtripStore.steps,
+  (newSteps) => {
+    console.log('ROADTRIP STEPS CHANGED', newSteps)
+    loadRoadtripMarkers()
+  },
+  { deep: true },
+)
+
+watch(
+  () => [roadtripStore.steps, start.value, end.value],
+  () => {
+    updateRoute()
+  },
+  { deep: true },
 )
 </script>
 

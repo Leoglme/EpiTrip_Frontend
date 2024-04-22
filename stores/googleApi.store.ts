@@ -1,5 +1,12 @@
 import { defineStore } from 'pinia'
-import type { Coordinates, GoogleRestaurant, GoogleBar, GoogleHotel, GoogleEvent } from '~/core/types/google-places'
+import type {
+  Coordinates,
+  GoogleRestaurant,
+  GoogleBar,
+  GoogleHotel,
+  GoogleEvent,
+  GooglePlace,
+} from '~/core/types/google-places'
 import type { ErrorResponse } from '~/core/types/response'
 import GooglePlacesService from '~/core/services/GooglePlacesService'
 import { useNotyfStore } from '~/stores/notyf.store'
@@ -90,8 +97,16 @@ export const useGoogleApiStore = defineStore('googleApiStore', {
         throw error
       }
     },
+
+    /* HELPERS */
+    findPlaceByName(name: string): GooglePlace | null {
+      const allPlaces: GooglePlace[] = this.allPlaces
+      return allPlaces.find((place: GooglePlace): boolean => place.name === name) || null
+    },
   },
   getters: {
     numberOfRestaurants: (state): number => state.restaurants.length,
+    // array of all places (restaurants, bars, hotels, events)
+    allPlaces: (state): GooglePlace[] => [...state.restaurants, ...state.bars, ...state.hotels, ...state.events],
   },
 })

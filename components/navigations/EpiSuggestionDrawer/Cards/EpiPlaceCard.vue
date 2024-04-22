@@ -59,12 +59,24 @@
         </EpiButton>
 
         <EpiButton
+          v-if="!isAddedToRoadTrip"
           button-type="outline"
           class="w-10 h-10"
           title="Ajouter au road trip"
           @click="() => emit('add-to-road-trip', props.place)"
         >
           <i class="fas fa-plus"></i>
+        </EpiButton>
+
+        <EpiButton
+          v-else
+          variant="red"
+          button-type="fill"
+          class="w-10 h-10"
+          title="Retirer du road trip"
+          @click="() => emit('remove-from-road-trip', props.place)"
+        >
+          <i class="fas fa-minus"></i>
         </EpiButton>
       </div>
     </div>
@@ -83,12 +95,17 @@ const props = defineProps({
     type: Object as PropType<GooglePlace>,
     required: true,
   },
+  isAddedToRoadTrip: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 /* EMITS */
 const emit = defineEmits<{
   'add-to-road-trip': [GooglePlace]
   'view-on-map': [GooglePlace]
+  'remove-from-road-trip': [GooglePlace]
 }>()
 </script>
 

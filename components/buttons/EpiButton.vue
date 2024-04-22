@@ -46,6 +46,10 @@ const props = defineProps({
     type: String as PropType<'left' | 'right'>,
     default: 'left',
   },
+  variant: {
+    type: String as PropType<'secondary' | 'red'>,
+    default: 'secondary',
+  },
 })
 
 /* COMPUTED */
@@ -54,8 +58,15 @@ const computedButtonClass = computed(() => {
     return 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
   }
 
-  return props.buttonType === 'fill'
-    ? 'bg-secondary-600 text-white hover:bg-secondary-700'
-    : 'bg-transparent text-secondary-600 border border-secondary-600 hover:bg-secondary-600 hover:text-white'
+  switch (props.variant) {
+    case 'red':
+      return props.buttonType === 'fill'
+        ? 'bg-red-600 text-white hover:bg-red-700'
+        : 'bg-transparent text-red-600 border border-red-600 hover:bg-red-600 hover:text-white'
+    default:
+      return props.buttonType === 'fill'
+        ? 'bg-secondary-600 text-white hover:bg-secondary-700'
+        : 'bg-transparent text-secondary-600 border border-secondary-600 hover:bg-secondary-600 hover:text-white'
+  }
 })
 </script>
