@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.2.0](https://github.com/Leoglme/EpiTrip_Frontend/compare/v1.1.0...v1.2.0) (2024-04-22)
+
+
+### 🚀 Features
+
+* add drawer animations && ask connection when user is not connected ([91a468b](https://github.com/Leoglme/EpiTrip_Frontend/commit/91a468b079a54c59789e85d762dd192ce7106c95))
+
+
+### 🐛 Bug Fixes
+
+* delete rule for register form ([8b92efa](https://github.com/Leoglme/EpiTrip_Frontend/commit/8b92efacede76b0c8d1fbe5324353e121225e091))
+* latest fix project ([983b0ac](https://github.com/Leoglme/EpiTrip_Frontend/commit/983b0ac3b12f514b13d01dfa28f2284b81226774))
+
+
+### 🧹 Chores
+
+* update dependencies vee validate and rules ([811f4c4](https://github.com/Leoglme/EpiTrip_Frontend/commit/811f4c4c875fa0095b6544afd6ad24a23724e9fe))
+
 ## [1.1.0](https://github.com/Leoglme/EpiTrip_Frontend/compare/v1.0.2...v1.1.0) (2024-04-22)
 
 
