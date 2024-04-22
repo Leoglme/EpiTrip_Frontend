@@ -386,7 +386,7 @@ const updateRoute = async () => {
 }
 
 // When a place marker is clicked, add or remove to the roadtrip
-const setupMarkerClickEvents = () => {
+const setupPlaceMarkerClickEvents = () => {
   if (map.value) {
     map.value.on(
       'click',
@@ -419,13 +419,47 @@ const setupMarkerClickEvents = () => {
   }
 }
 
+const setupRoadtripMarkerEvents = () => {
+  if (map.value) {
+    map.value.on(
+      'click',
+      'roadtrip',
+      (
+        e: mapboxgl.MapMouseEvent & {
+          features?: mapboxgl.MapboxGeoJSONFeature[] | undefined
+        } & mapboxgl.EventData,
+      ) => {
+        // find the clicked place
+        const clickedPlace = e.features?.find((feature) => feature.layer.id === 'roadtrip')
+        if (clickedPlace) {
+          console.log('Clicked roadtrip place:', clickedPlace)
+          const clickedPlaceName: string | undefined = clickedPlace.properties?.title
+          if (clickedPlaceName) {
+            const clickedPlace: GooglePlace | null = googleApiStore.findPlaceByName(clickedPlaceName)
+            if (clickedPlace) {
+              roadtripStore.removeStep(clickedPlace)
+            } else {
+              console.error('Clicked place not found')
+            }
+          }
+        }
+      },
+    )
+  }
+}
+
+const setupMarkerEvents = () => {
+  setupPlaceMarkerClickEvents()
+  setupRoadtripMarkerEvents()
+}
+
 /* LIFECYCLE */
 onMounted(() => {
   if (!props.isLoading && start.value && end.value) {
     initializeMap()
     nextTick(() => {
       map.value?.resize()
-      setupMarkerClickEvents()
+      setupMarkerEvents()
     })
   }
 })
@@ -438,7 +472,7 @@ watch(
       initializeMap()
       nextTick(() => {
         map.value?.resize()
-        setupMarkerClickEvents()
+        setupMarkerEvents()
       })
     }
   },
