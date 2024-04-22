@@ -11,8 +11,15 @@
         <EpiLogo large />
       </div>
 
+      <button
+        v-if="!useAuthStore().isConnected"
+        class="z-[10000] absolute top-4 right-4 w-8 h-8 text-white bg-green-700 rounded-full shadow-lg focus:outline-none md:hidden flex items-center justify-center"
+        @click="emit('click:login')"
+      >
+        <i class="fas fa-user"></i>
+      </button>
+
       <div class="w-full hidden md:flex items-center justify-end gap-4 flex-wrap">
-        <!--   NOT CONNECTED     -->
         <EpiButton
           v-if="!useAuthStore().isConnected"
           button-type="outline"
