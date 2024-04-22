@@ -37,7 +37,7 @@ import 'notyf/notyf.min.css'
 import { useDataLoaderStore } from '~/stores/dataLoader.store'
 import { useRouterStore } from '~/stores/router.store'
 import EpiPendingLoading from '~/components/loading/EpiPendingLoading.vue'
-import { useRoute } from '#imports'
+import { useAuthStore, useRoute } from '#imports'
 
 /* ROUTER */
 const route = useRoute()
@@ -69,6 +69,12 @@ watch(
 /* PROPS */
 const showLoginModal = ref(false)
 const showRegisterModal = ref(false)
+
+onMounted(() => {
+  if (!useAuthStore().isConnected) {
+    openLoginModal()
+  }
+})
 
 /* METHODS */
 const openLoginModal = () => {
