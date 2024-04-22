@@ -32,7 +32,10 @@
         v-for="(hotel, i) in hotels"
         :key="`hotel-${i}`"
         :place="hotel"
+        :is-added-to-road-trip="roadtripStore.isStepAdded(hotel)"
         @view-on-map="onViewOnMap($event)"
+        @add-to-road-trip="onAddToRoadTrip($event)"
+        @remove-from-road-trip="onRemoveFromRoadTrip($event)"
       />
     </div>
 
@@ -54,25 +57,35 @@ import { useGoogleApiStore } from '~/stores/googleApi.store'
 import { useRouterStore } from '~/stores/router.store'
 import EpiInput from '~/components/inputs/EpiInput.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
+import { useRoadtripStore } from '~/stores/roadtrip.store'
 
 /* STORES */
 const googlePlaceStore = useGoogleApiStore()
 const suggestionStore = useSuggestionStore()
 const routerStore = useRouterStore()
+const roadtripStore = useRoadtripStore()
 
 /* REFS */
 const hotels: Ref<GoogleHotel[]> = ref(googlePlaceStore.hotels)
 const search: Ref<string> = ref('')
 
 /* METHODS */
-const onViewOnMap = (event: GoogleHotel) => {
-  suggestionStore.setSelectedCoordinates(event.location)
+const onViewOnMap = (hotel: GoogleHotel) => {
+  suggestionStore.setSelectedCoordinates(hotel.location)
+}
+
+const onAddToRoadTrip = (hotel: GoogleHotel) => {
+  roadtripStore.addStep(hotel)
+}
+
+const onRemoveFromRoadTrip = (hotel: GoogleHotel) => {
+  roadtripStore.removeStep(hotel)
 }
 
 const searchHotels = (searchValue: string) => {
   search.value = searchValue
-  hotels.value = googlePlaceStore.hotels.filter((event) =>
-    event.name.toLowerCase().includes(search.value.toLowerCase()),
+  hotels.value = googlePlaceStore.hotels.filter((hotel) =>
+    hotel.name.toLowerCase().includes(search.value.toLowerCase()),
   )
 }
 

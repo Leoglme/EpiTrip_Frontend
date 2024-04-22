@@ -32,7 +32,10 @@
         v-for="(event, i) in events"
         :key="`event-${i}`"
         :place="event"
+        :is-added-to-road-trip="roadtripStore.isStepAdded(event)"
         @view-on-map="onViewOnMap($event)"
+        @add-to-road-trip="onAddToRoadTrip($event)"
+        @remove-from-road-trip="onRemoveFromRoadTrip($event)"
       />
     </div>
 
@@ -54,11 +57,13 @@ import { useGoogleApiStore } from '~/stores/googleApi.store'
 import { useRouterStore } from '~/stores/router.store'
 import EpiInput from '~/components/inputs/EpiInput.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
+import { useRoadtripStore } from '~/stores/roadtrip.store'
 
 /* STORES */
 const googlePlaceStore = useGoogleApiStore()
 const suggestionStore = useSuggestionStore()
 const routerStore = useRouterStore()
+const roadtripStore = useRoadtripStore()
 
 /* REFS */
 const events: Ref<GoogleEvent[]> = ref(googlePlaceStore.events)
@@ -67,6 +72,14 @@ const search: Ref<string> = ref('')
 /* METHODS */
 const onViewOnMap = (event: GoogleEvent) => {
   suggestionStore.setSelectedCoordinates(event.location)
+}
+
+const onAddToRoadTrip = (event: GoogleEvent) => {
+  roadtripStore.addStep(event)
+}
+
+const onRemoveFromRoadTrip = (event: GoogleEvent) => {
+  roadtripStore.removeStep(event)
 }
 
 const searchEvents = (searchValue: string) => {

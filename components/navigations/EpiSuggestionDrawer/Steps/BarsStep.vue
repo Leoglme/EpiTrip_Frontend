@@ -32,7 +32,10 @@
         v-for="(bar, i) in bars"
         :key="`bar-${i}`"
         :place="bar"
+        :is-added-to-road-trip="roadtripStore.isStepAdded(bar)"
         @view-on-map="onViewOnMap($event)"
+        @add-to-road-trip="onAddToRoadTrip($event)"
+        @remove-from-road-trip="onRemoveFromRoadTrip($event)"
       />
     </div>
 
@@ -54,24 +57,34 @@ import { useGoogleApiStore } from '~/stores/googleApi.store'
 import { useRouterStore } from '~/stores/router.store'
 import EpiInput from '~/components/inputs/EpiInput.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
+import { useRoadtripStore } from '~/stores/roadtrip.store'
 
 /* STORES */
 const googlePlaceStore = useGoogleApiStore()
 const suggestionStore = useSuggestionStore()
 const routerStore = useRouterStore()
+const roadtripStore = useRoadtripStore()
 
 /* REFS */
 const bars: Ref<GoogleBar[]> = ref(googlePlaceStore.bars)
 const search: Ref<string> = ref('')
 
 /* METHODS */
-const onViewOnMap = (event: GoogleBar) => {
-  suggestionStore.setSelectedCoordinates(event.location)
+const onViewOnMap = (bar: GoogleBar) => {
+  suggestionStore.setSelectedCoordinates(bar.location)
+}
+
+const onAddToRoadTrip = (bar: GoogleBar) => {
+  roadtripStore.addStep(bar)
+}
+
+const onRemoveFromRoadTrip = (bar: GoogleBar) => {
+  roadtripStore.removeStep(bar)
 }
 
 const searchBars = (searchValue: string) => {
   search.value = searchValue
-  bars.value = googlePlaceStore.bars.filter((event) => event.name.toLowerCase().includes(search.value.toLowerCase()))
+  bars.value = googlePlaceStore.bars.filter((bar) => bar.name.toLowerCase().includes(search.value.toLowerCase()))
 }
 
 const refreshBars = async () => {
