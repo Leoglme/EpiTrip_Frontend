@@ -8,7 +8,7 @@
         'bg-secondary-600 text-white': suggestionStore.activeTabId === category.id,
         'bg-gray-100 hover:bg-gray-200': suggestionStore.activeTabId !== category.id,
       }"
-      class="w-full py-3 px-2 transition-colors duration-300 ease-in-out border-r border-b flex flex-wrap justify-center gap-2 items-center"
+      class="w-full py-3 px-2 border-r border-b flex flex-wrap justify-center gap-2 items-center"
       @click="suggestionStore.setActiveTabId(category.id)"
     >
       <i
