@@ -1,13 +1,21 @@
 import { defineStore } from 'pinia'
 import type { Coordinates, GooglePlace } from '~/core/types/google-places'
 import { useRouterStore } from '~/stores/router.store'
+import type { Roadtrip } from '~/core/types/roadtrip'
+import RoadtripService from '~/core/services/RoadtripService'
+import NotyfService from '~/lib/services/NotyfService'
+import type { ErrorResponse } from '~/core/types/response'
 
 export const useRoadtripStore = defineStore('roadtrip', {
   state: () => ({
+    roadtrips: [] as Roadtrip[],
     steps: [] as GooglePlace[],
     orderedSteps: [] as GooglePlace[],
   }),
   actions: {
+    setRoadtrips(roadtrips: Roadtrip[]): void {
+      this.roadtrips = roadtrips
+    },
     addStep(place: GooglePlace): void {
       this.steps.push(place)
       this.orderedSteps = [...this.steps].sort((a: GooglePlace, b: GooglePlace): number =>
@@ -22,6 +30,18 @@ export const useRoadtripStore = defineStore('roadtrip', {
       console.log('LENGTH', this.steps.length)
       this.steps = this.steps.filter((step: GooglePlace): boolean => step.location !== place.location)
       console.log('LENGTH AFTER', this.steps.length)
+    },
+    // API
+    async fetchAllRoadtrips(): Promise<void> {
+      const roadtrips: Roadtrip[] | ErrorResponse = await RoadtripService.getAllRoadtrips()
+
+      // verify if roadtrips is an array and not an error object
+      if (Array.isArray(roadtrips)) {
+        this.setRoadtrips(roadtrips)
+      } else {
+        const notyf: NotyfService = new NotyfService()
+        notyf.error('Failed to fetch roadtrips')
+      }
     },
     // Order steps by distance from start and end (closest to start first)
     compareSteps(a: Coordinates, b: Coordinates): number {
