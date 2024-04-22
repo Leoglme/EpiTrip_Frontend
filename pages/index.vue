@@ -46,13 +46,17 @@
       </section>
     </div>
 
-    <section class="flex justify-center items-start z-2 relative">
+    <section
+      v-if="roadtripsIsLoaded && roadtripStore.roadtrips && roadtripStore.roadtrips.length > 0"
+      class="flex justify-center items-start z-2 relative"
+    >
       <div
-        class="flex md:grid grid-cols-3 overflow-x-scroll pb-24 md:overflow-x-hidden xl:grid-cols-4 gap-6 items-start max-w-6xl"
+        class="grid sm:grid-cols-2 lg:grid-cols-3 overflow-x-scroll pb-24 md:overflow-x-hidden xl:grid-cols-4 gap-6 items-start max-w-6xl"
       >
         <EpiRoadTripCard
-          v-for="n in 14"
-          :key="n"
+          v-for="roadtrip in roadtripStore.roadtrips"
+          :key="roadtrip.id"
+          :roadtrip="roadtrip"
         />
       </div>
     </section>
@@ -66,6 +70,10 @@ import EpiRoadTripCard from '~/components/cards/EpiRoadTripCard.vue'
 import EpiButton from '~/components/buttons/EpiButton.vue'
 import EpiCitySelectSuggestion from '~/components/inputs/EpiCitySelectSuggestion.vue'
 import type { MapboxPlace } from '~/core/types/mapbox'
+import { useRoadtripStore } from '~/stores/roadtrip.store'
+
+/* STORE */
+const roadtripStore = useRoadtripStore()
 
 /* METAS */
 useHead({
@@ -76,8 +84,16 @@ useHead({
 const router = useRouter()
 
 /* REFS */
+const roadtripsIsLoaded: Ref<boolean> = ref(false)
 const startMapboxPlace: Ref<MapboxPlace | undefined> = ref(undefined)
 const endMapboxPlace: Ref<MapboxPlace | undefined> = ref(undefined)
+
+/* LIFECYCLE */
+onMounted(async () => {
+  roadtripsIsLoaded.value = false
+  await roadtripStore.fetchAllRoadtrips()
+  roadtripsIsLoaded.value = true
+})
 
 /* METHODS */
 const setStartPlace = (place: MapboxPlace | undefined) => {

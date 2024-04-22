@@ -50,6 +50,7 @@
 
 <script lang="ts" setup>
 import type { Ref } from 'vue'
+import { defineEmits } from 'vue'
 import type { GoogleRestaurant } from '~/core/types/google-places'
 import EpiPlaceCard from '~/components/navigations/EpiSuggestionDrawer/Cards/EpiPlaceCard.vue'
 import { useSuggestionStore } from '~/stores/suggestion.store'
@@ -68,10 +69,12 @@ const roadtripStore = useRoadtripStore()
 /* REFS */
 const restaurants: Ref<GoogleRestaurant[]> = ref(googlePlaceStore.restaurants)
 const search: Ref<string> = ref('')
+const emits = defineEmits(['remove-drawer'])
 
 /* METHODS */
 const onViewOnMap = (restaurant: GoogleRestaurant) => {
   suggestionStore.setSelectedCoordinates(restaurant.location)
+  emits('remove-drawer')
 }
 
 const onAddToRoadTrip = (restaurant: GoogleRestaurant) => {

@@ -40,7 +40,7 @@
         type="password"
         label="Confirmer le mot de passe"
         placeholder="Confirmez votre mot de passe"
-        rules="required|min:6|confirmed:password"
+        rules="required|min:6"
       />
 
       <EpiButton
